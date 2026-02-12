@@ -74,14 +74,14 @@ fun AiAnalysisScreen(
             uiState.error != null -> {
                 Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(uiState.error!!, color = TCardlyColors.CoralWarm)
+                        Text(uiState.error.orEmpty(), color = TCardlyColors.CoralWarm)
                         Spacer(modifier = Modifier.height(16.dp))
                         OutlinedButton(onClick = { viewModel.requestAnalysis(companyName) }) { Text("다시 시도") }
                     }
                 }
             }
             uiState.report != null -> {
-                val report = uiState.report!!
+                val report = uiState.report ?: return@Scaffold
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

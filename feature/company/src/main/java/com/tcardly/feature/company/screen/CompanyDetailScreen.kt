@@ -74,7 +74,7 @@ fun CompanyDetailScreen(
                         if (info?.isListed == true) InfoRow("상장", "상장기업")
 
                         if (info == null && uiState.error != null) {
-                            Text(uiState.error!!, color = TCardlyColors.CoralWarm, style = MaterialTheme.typography.bodySmall)
+                            Text(uiState.error.orEmpty(), color = TCardlyColors.CoralWarm, style = MaterialTheme.typography.bodySmall)
                         } else if (info == null) {
                             Text("기업 정보를 불러오는 중...", color = TCardlyColors.SlateMid)
                         }

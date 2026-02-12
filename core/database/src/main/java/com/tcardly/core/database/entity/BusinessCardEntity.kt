@@ -10,7 +10,9 @@ import com.tcardly.core.common.model.SourceType
         Index(value = ["company"]),
         Index(value = ["groupId"]),
         Index(value = ["createdAt"]),
-        Index(value = ["name", "mobilePhone"])
+        Index(value = ["name", "mobilePhone"]),
+        Index(value = ["email"]),
+        Index(value = ["isFavorite"])
     ],
     foreignKeys = [
         ForeignKey(

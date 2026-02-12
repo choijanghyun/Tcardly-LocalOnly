@@ -10,9 +10,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 data class GroupTagManageUiState(
@@ -40,7 +42,10 @@ class GroupTagManageViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             combine(repository.getAllGroups(), repository.getAllTags()) { groups, tags ->
-                _uiState.update { it.copy(groups = groups, tags = tags, isLoading = false) }
+                _uiState.update { it.copy(groups = groups, tags = tags, isLoading = false, error = null) }
+            }.catch { e ->
+                Timber.e(e, "그룹/태그 로드 실패")
+                _uiState.update { it.copy(isLoading = false, error = "그룹/태그 로드에 실패했습니다.") }
             }.collect {}
         }
     }

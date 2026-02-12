@@ -67,8 +67,9 @@ fun CardDetailScreen(
                 }
             }
             is CardDetailUiState.Error -> {
+                val errorState = uiState as? CardDetailUiState.Error
                 Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                    Text((uiState as CardDetailUiState.Error).message, color = TCardlyColors.CoralWarm)
+                    Text(errorState?.message ?: "알 수 없는 오류", color = TCardlyColors.CoralWarm)
                 }
             }
             else -> {

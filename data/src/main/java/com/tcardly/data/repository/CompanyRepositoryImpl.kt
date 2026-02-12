@@ -4,12 +4,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.tcardly.core.common.model.ResultWrapper
 import com.tcardly.core.database.dao.CompanyInfoDao
-import com.tcardly.core.database.entity.AiAnalysisCacheEntity
 import com.tcardly.core.database.entity.CompanyInfoEntity
 import com.tcardly.domain.model.AiAnalysisReport
 import com.tcardly.domain.model.CompanyInfo
 import com.tcardly.domain.model.FinancialYear
-import com.tcardly.domain.model.SwotAnalysis
 import com.tcardly.domain.repository.CompanyRepository
 import timber.log.Timber
 import javax.inject.Inject
@@ -97,7 +95,10 @@ class CompanyRepositoryImpl @Inject constructor(
         val financialData: List<FinancialYear> = try {
             if (financialDataJson.isNullOrBlank()) emptyList()
             else gson.fromJson(financialDataJson, object : TypeToken<List<FinancialYear>>() {}.type)
-        } catch (_: Exception) { emptyList() }
+        } catch (e: Exception) {
+            Timber.w(e, "재무 데이터 파싱 실패: $companyName")
+            emptyList()
+        }
 
         return CompanyInfo(
             id = id, companyName = companyName, ceoName = ceoName,

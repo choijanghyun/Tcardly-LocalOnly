@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 data class ScanResultUiState(
@@ -37,6 +38,9 @@ class ScanResultViewModel @Inject constructor(
     private val saveBusinessCardUseCase: SaveBusinessCardUseCase
 ) : ViewModel() {
 
+    private val stringRegex = "\"(\\w+)\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"".toRegex()
+    private val numberRegex = "\"(\\w+)\"\\s*:\\s*([\\d.]+)".toRegex()
+
     private val _uiState = MutableStateFlow(ScanResultUiState())
     val uiState: StateFlow<ScanResultUiState> = _uiState.asStateFlow()
 
@@ -59,7 +63,8 @@ class ScanResultViewModel @Inject constructor(
                     cardImageUri = map["cardImageUri"]?.takeIf { uri -> uri.isNotBlank() }
                 )
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Timber.e(e, "OCR 결과 파싱 실패")
             _uiState.update { it.copy(error = "OCR 결과를 파싱할 수 없습니다.") }
         }
     }
@@ -136,8 +141,7 @@ class ScanResultViewModel @Inject constructor(
     private fun parseSimpleJson(json: String): Map<String, String> {
         val map = mutableMapOf<String, String>()
         val content = json.trim().removePrefix("{").removeSuffix("}")
-        val regex = "\"(\\w+)\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"".toRegex()
-        regex.findAll(content).forEach { match ->
+        stringRegex.findAll(content).forEach { match ->
             val key = match.groupValues[1]
             val value = match.groupValues[2]
                 .replace("\\n", "\n").replace("\\r", "\r")
@@ -146,8 +150,7 @@ class ScanResultViewModel @Inject constructor(
             map[key] = value
         }
         // confidence (숫자)
-        val numRegex = "\"(\\w+)\"\\s*:\\s*([\\d.]+)".toRegex()
-        numRegex.findAll(content).forEach { match ->
+        numberRegex.findAll(content).forEach { match ->
             val key = match.groupValues[1]
             if (key !in map) map[key] = match.groupValues[2]
         }

@@ -64,20 +64,24 @@ class CardDetailViewModel @Inject constructor(
     val uiState: StateFlow<CardDetailUiState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            getCardDetailUseCase(cardId).collect { card ->
-                _uiState.value = if (card != null) {
-                    CardDetailUiState.Success(
-                        name = card.name, company = card.company,
-                        position = card.position, department = card.department,
-                        mobilePhone = card.mobilePhone, officePhone = card.officePhone,
-                        email = card.email, address = card.address,
-                        website = card.website, memo = card.memo,
-                        isFavorite = card.isFavorite, ocrConfidence = card.ocrConfidence,
-                        tags = card.tags, cardId = card.id
-                    )
-                } else {
-                    CardDetailUiState.Error("명함을 찾을 수 없습니다.")
+        if (cardId <= 0L) {
+            _uiState.value = CardDetailUiState.Error("유효하지 않은 명함 ID입니다.")
+        } else {
+            viewModelScope.launch {
+                getCardDetailUseCase(cardId).collect { card ->
+                    _uiState.value = if (card != null) {
+                        CardDetailUiState.Success(
+                            name = card.name, company = card.company,
+                            position = card.position, department = card.department,
+                            mobilePhone = card.mobilePhone, officePhone = card.officePhone,
+                            email = card.email, address = card.address,
+                            website = card.website, memo = card.memo,
+                            isFavorite = card.isFavorite, ocrConfidence = card.ocrConfidence,
+                            tags = card.tags, cardId = card.id
+                        )
+                    } else {
+                        CardDetailUiState.Error("명함을 찾을 수 없습니다.")
+                    }
                 }
             }
         }

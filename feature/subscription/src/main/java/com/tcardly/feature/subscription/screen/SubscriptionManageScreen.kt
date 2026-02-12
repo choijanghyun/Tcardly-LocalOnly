@@ -16,9 +16,9 @@ import com.tcardly.core.designsystem.theme.TCardlyColors
 import com.tcardly.core.ui.component.TCardlyButton
 import com.tcardly.core.ui.component.TCardlyCard
 import com.tcardly.feature.subscription.viewmodel.SubscriptionManageViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,7 +61,9 @@ fun SubscriptionManageScreen(
 
                         if (sub.status == SubscriptionStatus.ACTIVE && sub.expiresAt != null) {
                             Spacer(modifier = Modifier.height(8.dp))
-                            val dateStr = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(Date(sub.expiresAt!!))
+                            val dateStr = Instant.ofEpochMilli(sub.expiresAt)
+                                .atZone(ZoneId.systemDefault())
+                                .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
                             Text("다음 결제일: $dateStr", color = TCardlyColors.SlateMid)
                         }
                     }

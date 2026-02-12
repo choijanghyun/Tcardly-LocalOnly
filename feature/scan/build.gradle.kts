@@ -44,4 +44,5 @@ dependencies {
     implementation("androidx.camera:camera-view:${Versions.cameraX}")
     implementation("com.google.mlkit:text-recognition-korean:16.0.0")
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation("com.jakewharton.timber:timber:${Versions.timber}")
 }

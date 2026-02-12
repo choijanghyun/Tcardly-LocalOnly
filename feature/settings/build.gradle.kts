@@ -38,4 +38,5 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:${Versions.navigation}")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     implementation("io.coil-kt:coil-compose:${Versions.coil}")
+    implementation("com.jakewharton.timber:timber:${Versions.timber}")
 }
