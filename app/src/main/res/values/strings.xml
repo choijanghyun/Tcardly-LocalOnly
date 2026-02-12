@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">T-CARDLY</string>
+    <string name="tab_home">홈</string>
+    <string name="tab_scan">스캔</string>
+    <string name="tab_contacts">연락처</string>
+    <string name="tab_menu">전체</string>
+    <string name="btn_save">저장</string>
+    <string name="btn_cancel">취소</string>
+    <string name="btn_delete">삭제</string>
+    <string name="btn_edit">편집</string>
+    <string name="btn_share">공유</string>
+    <string name="btn_back">뒤로</string>
+    <string name="label_name">이름</string>
+    <string name="label_company">회사명</string>
+    <string name="label_position">직책</string>
+    <string name="label_phone">전화번호</string>
+    <string name="label_email">이메일</string>
+    <string name="label_address">주소</string>
+    <string name="label_memo">메모</string>
+    <string name="msg_no_cards">등록된 명함이 없습니다</string>
+    <string name="msg_scan_guide">명함을 프레임 안에 맞춰주세요</string>
+    <string name="msg_processing">인식 중...</string>
+    <string name="msg_save_success">저장되었습니다</string>
+    <string name="msg_delete_confirm">정말 삭제하시겠습니까?</string>
+    <string name="msg_export_limit">내보내기 한도를 초과했습니다</string>
+    <string name="msg_ai_limit">AI 분석 한도를 초과했습니다</string>
+</resources>

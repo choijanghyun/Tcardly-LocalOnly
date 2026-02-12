@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <cache-path name="camera_photos" path="camera/" />
+    <files-path name="card_images" path="card_images/" />
+    <files-path name="exports" path="exports/" />
+    <external-cache-path name="shared_images" path="shared/" />
+</paths>
