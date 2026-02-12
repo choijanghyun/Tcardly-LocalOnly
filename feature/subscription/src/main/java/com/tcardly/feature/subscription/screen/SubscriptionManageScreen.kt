@@ -59,10 +59,12 @@ fun SubscriptionManageScreen(
                         Text(sub.plan.displayName, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold,
                             color = TCardlyColors.TealDeep)
 
-                        if (sub.status == SubscriptionStatus.ACTIVE && sub.expiresAt != null) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            val dateStr = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(Date(sub.expiresAt!!))
-                            Text("다음 결제일: $dateStr", color = TCardlyColors.SlateMid)
+                        if (sub.status == SubscriptionStatus.ACTIVE) {
+                            sub.expiresAt?.let { expiresAt ->
+                                Spacer(modifier = Modifier.height(8.dp))
+                                val dateStr = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA).format(Date(expiresAt))
+                                Text("다음 결제일: $dateStr", color = TCardlyColors.SlateMid)
+                            }
                         }
                     }
                 }

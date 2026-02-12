@@ -22,6 +22,7 @@ import com.tcardly.core.ui.component.ConfidenceBadge
 import com.tcardly.core.ui.component.TagChip
 import com.tcardly.core.ui.component.TCardlyButton
 import com.tcardly.core.ui.component.TCardlyCard
+import com.tcardly.core.ui.util.toComposeColor
 import com.tcardly.feature.contacts.viewmodel.CardDetailUiState
 import com.tcardly.feature.contacts.viewmodel.CardDetailViewModel
 
@@ -128,7 +129,7 @@ fun CardDetailScreen(
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     uiState.tags.forEach { tag ->
-                                        TagChip(name = tag.name, bgColor = tag.bgColor, textColor = tag.textColor)
+                                        TagChip(name = tag.name, bgColor = tag.bgColor.toComposeColor(), textColor = tag.textColor.toComposeColor())
                                     }
                                 }
                             }

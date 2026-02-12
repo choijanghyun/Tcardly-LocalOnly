@@ -16,6 +16,7 @@ import com.tcardly.core.designsystem.theme.TCardlyColors
 import com.tcardly.core.ui.component.TagChip
 import com.tcardly.core.ui.component.TCardlyCard
 import com.tcardly.core.ui.component.TCardlyTextField
+import com.tcardly.core.ui.util.toComposeColor
 import com.tcardly.feature.settings.viewmodel.GroupTagManageViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,7 +81,7 @@ fun GroupTagManageScreen(
             items(uiState.tags, key = { it.id }) { tag ->
                 TCardlyCard {
                     Row(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
-                        TagChip(name = tag.name, bgColor = tag.bgColor, textColor = tag.textColor)
+                        TagChip(name = tag.name, bgColor = tag.bgColor.toComposeColor(), textColor = tag.textColor.toComposeColor())
                         Spacer(modifier = Modifier.weight(1f))
                         if (!tag.isDefault) {
                             IconButton(onClick = { viewModel.deleteTag(tag.id) }) {
