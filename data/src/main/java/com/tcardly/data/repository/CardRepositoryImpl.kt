@@ -1,6 +1,7 @@
 package com.tcardly.data.repository
 
 import com.tcardly.core.common.model.ResultWrapper
+import com.tcardly.core.common.model.SourceType
 import com.tcardly.core.common.util.DateUtils
 import com.tcardly.core.database.dao.BusinessCardDao
 import com.tcardly.core.database.dao.ActivityLogDao
@@ -51,10 +52,10 @@ class CardRepositoryImpl @Inject constructor(
                 ActivityLogEntity(
                     cardId = id,
                     type = when (card.sourceType) {
-                        com.tcardly.core.common.model.SourceType.CAMERA_OCR -> ActivityType.SCAN
-                        com.tcardly.core.common.model.SourceType.QR_CODE -> ActivityType.QR_SCAN
-                        com.tcardly.core.common.model.SourceType.MANUAL -> ActivityType.MANUAL_INPUT
-                        else -> ActivityType.SCAN
+                        SourceType.CAMERA_OCR -> ActivityType.SCAN
+                        SourceType.GALLERY_OCR -> ActivityType.SCAN
+                        SourceType.QR_CODE -> ActivityType.QR_SCAN
+                        SourceType.MANUAL -> ActivityType.MANUAL_INPUT
                     },
                     content = "명함 등록",
                     timestamp = DateUtils.now()

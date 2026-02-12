@@ -1,7 +1,7 @@
 package com.tcardly.feature.contacts.screen
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -128,14 +128,24 @@ fun ContactListScreen(
                 ListItem(
                     headlineContent = { Text("스캔으로 추가") },
                     leadingContent = { Icon(Icons.Default.CameraAlt, contentDescription = null, tint = TCardlyColors.TealDeep) },
-                    modifier = Modifier.fillMaxWidth().background(TCardlyColors.PureWhite, RoundedCornerShape(12.dp))
+                    modifier = Modifier.fillMaxWidth()
+                        .background(TCardlyColors.PureWhite, RoundedCornerShape(12.dp))
+                        .clickable {
+                            showAddSheet = false
+                            onNavigateToScan()
+                        }
                         .padding(4.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 ListItem(
                     headlineContent = { Text("수기 입력") },
                     leadingContent = { Icon(Icons.Default.Edit, contentDescription = null, tint = TCardlyColors.TealDeep) },
-                    modifier = Modifier.fillMaxWidth().background(TCardlyColors.PureWhite, RoundedCornerShape(12.dp))
+                    modifier = Modifier.fillMaxWidth()
+                        .background(TCardlyColors.PureWhite, RoundedCornerShape(12.dp))
+                        .clickable {
+                            showAddSheet = false
+                            onNavigateToManualInput()
+                        }
                         .padding(4.dp)
                 )
                 Spacer(modifier = Modifier.height(24.dp))

@@ -51,13 +51,17 @@ class HomeViewModel @Inject constructor(
                     cardRepository.getCardCount(),
                     subscriptionRepository.observeSubscription()
                 ) { profile, recentCards, cardCount, subscription ->
-                    HomeUiState.Success(
-                        profile = profile,
-                        greeting = "${DateUtils.getGreeting()}, ${profile?.name ?: "사용자"}님",
-                        cardCount = cardCount,
-                        recentCards = recentCards,
-                        subscription = subscription
-                    )
+                    if (cardCount == 0) {
+                        HomeUiState.Empty
+                    } else {
+                        HomeUiState.Success(
+                            profile = profile,
+                            greeting = "${DateUtils.getGreeting()}, ${profile?.name ?: "사용자"}님",
+                            cardCount = cardCount,
+                            recentCards = recentCards,
+                            subscription = subscription
+                        )
+                    }
                 }.collect { state ->
                     _uiState.value = state
                 }

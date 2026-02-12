@@ -6,13 +6,16 @@ import java.util.Date
 import java.util.Locale
 
 object DateUtils {
-    private val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.KOREA)
-    private val dateTimeFormat = SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.KOREA)
-    private val timeFormat = SimpleDateFormat("HH:mm", Locale.KOREA)
+    private val dateFormat: ThreadLocal<SimpleDateFormat> =
+        ThreadLocal.withInitial { SimpleDateFormat("yyyy.MM.dd", Locale.KOREA) }
+    private val dateTimeFormat: ThreadLocal<SimpleDateFormat> =
+        ThreadLocal.withInitial { SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.KOREA) }
+    private val timeFormat: ThreadLocal<SimpleDateFormat> =
+        ThreadLocal.withInitial { SimpleDateFormat("HH:mm", Locale.KOREA) }
 
-    fun formatDate(timestamp: Long): String = dateFormat.format(Date(timestamp))
-    fun formatDateTime(timestamp: Long): String = dateTimeFormat.format(Date(timestamp))
-    fun formatTime(timestamp: Long): String = timeFormat.format(Date(timestamp))
+    fun formatDate(timestamp: Long): String = dateFormat.get()!!.format(Date(timestamp))
+    fun formatDateTime(timestamp: Long): String = dateTimeFormat.get()!!.format(Date(timestamp))
+    fun formatTime(timestamp: Long): String = timeFormat.get()!!.format(Date(timestamp))
     fun now(): Long = System.currentTimeMillis()
 
     fun getGreeting(): String {
