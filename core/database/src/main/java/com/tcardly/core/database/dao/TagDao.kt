@@ -26,5 +26,5 @@ interface TagDao {
     suspend fun removeAllCardTags(cardId: Long)
 
     @Query("DELETE FROM tags WHERE id = :id AND isDefault = 0")
-    suspend fun deleteTag(id: Long)
+    suspend fun deleteTag(id: Long): Int
 }

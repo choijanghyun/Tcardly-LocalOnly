@@ -15,9 +15,18 @@ fun UserProfileEntity.toDomain(): UserProfile {
         currentCompany = currentCompany, currentPosition = currentPosition,
         mobilePhone = mobilePhone, email = email,
         profileImageUri = profileImageUri,
-        careers = careersJson?.let { gson.fromJson(it, object : TypeToken<List<Career>>() {}.type) } ?: emptyList(),
-        educations = educationsJson?.let { gson.fromJson(it, object : TypeToken<List<Education>>() {}.type) } ?: emptyList(),
-        interests = interestsJson?.let { gson.fromJson(it, object : TypeToken<List<String>>() {}.type) } ?: emptyList(),
+        careers = careersJson?.let {
+            try { gson.fromJson(it, object : TypeToken<List<Career>>() {}.type) }
+            catch (_: Exception) { emptyList() }
+        } ?: emptyList(),
+        educations = educationsJson?.let {
+            try { gson.fromJson(it, object : TypeToken<List<Education>>() {}.type) }
+            catch (_: Exception) { emptyList() }
+        } ?: emptyList(),
+        interests = interestsJson?.let {
+            try { gson.fromJson(it, object : TypeToken<List<String>>() {}.type) }
+            catch (_: Exception) { emptyList() }
+        } ?: emptyList(),
         createdAt = createdAt, updatedAt = updatedAt
     )
 }

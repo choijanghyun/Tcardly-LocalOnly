@@ -4,12 +4,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.tcardly.core.common.model.ResultWrapper
 import com.tcardly.core.database.dao.CompanyInfoDao
-import com.tcardly.core.database.entity.AiAnalysisCacheEntity
 import com.tcardly.core.database.entity.CompanyInfoEntity
 import com.tcardly.domain.model.AiAnalysisReport
 import com.tcardly.domain.model.CompanyInfo
 import com.tcardly.domain.model.FinancialYear
-import com.tcardly.domain.model.SwotAnalysis
 import com.tcardly.domain.repository.CompanyRepository
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -16,11 +16,10 @@
 -keep class javax.inject.** { *; }
 -keep @dagger.hilt.android.lifecycle.HiltViewModel class * { *; }
 
-# ── Compose ──
--keep class androidx.compose.** { *; }
+# ── Compose (Compose ships its own consumer rules; only keep stability) ──
+-dontwarn androidx.compose.**
 
 # ── Gson (JSON 직렬화) ──
--keepattributes Signature
 -keep class com.google.gson.** { *; }
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
@@ -44,20 +43,20 @@
 -keep class net.sqlcipher.** { *; }
 -dontwarn net.sqlcipher.**
 
-# ── Firebase ──
--keep class com.google.firebase.** { *; }
+# ── Firebase (ships its own consumer rules) ──
+-dontwarn com.google.firebase.**
 
 # ── AdMob ──
 -keep class com.google.android.gms.ads.** { *; }
 
-# ── 결제 보안 - 핵심 클래스 난독화 강화 ──
--keep class com.tcardly.core.security.** { *; }
--keep class com.tcardly.core.billing.** { *; }
+# ── 결제 보안 - 핵심 클래스는 난독화 유지 (keep 제거) ──
+# security/billing 클래스는 난독화되도록 별도 keep 규칙을 두지 않음
+-keepclassmembers class com.tcardly.core.security.** { public <methods>; }
+-keepclassmembers class com.tcardly.core.billing.** { public <methods>; }
 
-# ── OkHttp ──
+# ── OkHttp (ships its own consumer rules) ──
 -dontwarn okhttp3.**
 -dontwarn okio.**
--keep class okhttp3.** { *; }
 
 # ── Kotlin Coroutines ──
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}

@@ -19,5 +19,5 @@ interface GroupDao {
     suspend fun update(group: GroupEntity)
 
     @Query("DELETE FROM groups WHERE id = :id AND isDefault = 0")
-    suspend fun delete(id: Long)
+    suspend fun delete(id: Long): Int
 }

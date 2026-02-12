@@ -19,9 +19,7 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.lifecycle}")
     implementation("com.google.dagger:hilt-android:${Versions.hilt}")
     ksp("com.google.dagger:hilt-compiler:${Versions.hilt}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}")
-
 }

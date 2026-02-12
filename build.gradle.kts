@@ -8,11 +8,4 @@ plugins {
     id("com.google.gms.google-services") version "4.4.0" apply false
 }
 
-buildscript {
-    extra.apply {
-        set("compileSdk", 34)
-        set("minSdk", 26)
-        set("targetSdk", 34)
-        set("kotlinCompilerExtensionVersion", "1.5.8")
-    }
-}
+// SDK 버전은 buildSrc/src/main/kotlin/Versions.kt에서 관리

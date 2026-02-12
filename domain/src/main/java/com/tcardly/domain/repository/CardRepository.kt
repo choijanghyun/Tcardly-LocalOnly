@@ -2,7 +2,6 @@ package com.tcardly.domain.repository
 
 import com.tcardly.core.common.model.ResultWrapper
 import com.tcardly.domain.model.BusinessCard
-import com.tcardly.domain.model.OcrResult
 import kotlinx.coroutines.flow.Flow
 
 interface CardRepository {

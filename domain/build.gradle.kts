@@ -21,5 +21,4 @@ dependencies {
     implementation("com.google.dagger:hilt-android:${Versions.hilt}")
     ksp("com.google.dagger:hilt-compiler:${Versions.hilt}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}")
-    implementation("javax.inject:javax.inject:1")
 }

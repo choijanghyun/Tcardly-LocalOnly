@@ -66,8 +66,12 @@ class GroupTagRepositoryImpl @Inject constructor(
 
     override suspend fun deleteGroup(groupId: Long): ResultWrapper<Unit> {
         return try {
-            groupDao.delete(groupId)
-            ResultWrapper.Success(Unit)
+            val deleted = groupDao.delete(groupId)
+            if (deleted > 0) {
+                ResultWrapper.Success(Unit)
+            } else {
+                ResultWrapper.Error("기본 그룹은 삭제할 수 없습니다.")
+            }
         } catch (e: Exception) {
             ResultWrapper.Error("그룹 삭제에 실패했습니다.", e)
         }
@@ -88,8 +92,12 @@ class GroupTagRepositoryImpl @Inject constructor(
 
     override suspend fun deleteTag(tagId: Long): ResultWrapper<Unit> {
         return try {
-            tagDao.deleteTag(tagId)
-            ResultWrapper.Success(Unit)
+            val deleted = tagDao.deleteTag(tagId)
+            if (deleted > 0) {
+                ResultWrapper.Success(Unit)
+            } else {
+                ResultWrapper.Error("기본 태그는 삭제할 수 없습니다.")
+            }
         } catch (e: Exception) {
             ResultWrapper.Error("태그 삭제에 실패했습니다.", e)
         }

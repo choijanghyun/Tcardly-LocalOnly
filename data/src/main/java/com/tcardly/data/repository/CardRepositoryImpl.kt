@@ -47,7 +47,12 @@ class CardRepositoryImpl @Inject constructor(
 
     override suspend fun saveCard(card: BusinessCard): ResultWrapper<Long> {
         return try {
-            val id = cardDao.insertCard(card.toEntity())
+            val now = DateUtils.now()
+            val cardWithTimestamps = card.copy(
+                createdAt = if (card.createdAt == 0L) now else card.createdAt,
+                updatedAt = now
+            )
+            val id = cardDao.insertCard(cardWithTimestamps.toEntity())
             activityLogDao.insert(
                 ActivityLogEntity(
                     cardId = id,
@@ -69,7 +74,7 @@ class CardRepositoryImpl @Inject constructor(
 
     override suspend fun updateCard(card: BusinessCard): ResultWrapper<Unit> {
         return try {
-            cardDao.updateCard(card.toEntity())
+            cardDao.updateCard(card.copy(updatedAt = DateUtils.now()).toEntity())
             ResultWrapper.Success(Unit)
         } catch (e: Exception) {
             ResultWrapper.Error("명함 수정 실패: ${e.message}", e)
@@ -103,20 +108,25 @@ class CardRepositoryImpl @Inject constructor(
     }
 
     override suspend fun generateVCard(cardId: Long): ResultWrapper<String> {
-        val card = cardDao.getCardById(cardId) ?: return ResultWrapper.Error("명함을 찾을 수 없습니다.")
-        val vCard = buildString {
-            appendLine("BEGIN:VCARD")
-            appendLine("VERSION:3.0")
-            appendLine("FN:${card.name}")
-            card.company?.let { appendLine("ORG:$it") }
-            card.position?.let { appendLine("TITLE:$it") }
-            card.mobilePhone?.let { appendLine("TEL;TYPE=CELL:$it") }
-            card.officePhone?.let { appendLine("TEL;TYPE=WORK:$it") }
-            card.email?.let { appendLine("EMAIL:$it") }
-            card.address?.let { appendLine("ADR:;;$it") }
-            card.website?.let { appendLine("URL:$it") }
-            appendLine("END:VCARD")
+        return try {
+            val card = cardDao.getCardById(cardId)
+                ?: return ResultWrapper.Error("명함을 찾을 수 없습니다.")
+            val vCard = buildString {
+                appendLine("BEGIN:VCARD")
+                appendLine("VERSION:3.0")
+                appendLine("FN:${card.name}")
+                card.company?.let { appendLine("ORG:$it") }
+                card.position?.let { appendLine("TITLE:$it") }
+                card.mobilePhone?.let { appendLine("TEL;TYPE=CELL:$it") }
+                card.officePhone?.let { appendLine("TEL;TYPE=WORK:$it") }
+                card.email?.let { appendLine("EMAIL:$it") }
+                card.address?.let { appendLine("ADR:;;$it") }
+                card.website?.let { appendLine("URL:$it") }
+                appendLine("END:VCARD")
+            }
+            ResultWrapper.Success(vCard)
+        } catch (e: Exception) {
+            ResultWrapper.Error("vCard 생성 실패: ${e.message}", e)
         }
-        return ResultWrapper.Success(vCard)
     }
 }

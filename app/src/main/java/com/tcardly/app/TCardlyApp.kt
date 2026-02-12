@@ -110,8 +110,7 @@ fun TCardlyApp() {
                 .padding(innerPadding)
         ) {
             MainNavGraph(
-                navController = navController,
-                snackbarHostState = snackbarHostState
+                navController = navController
             )
         }
     }

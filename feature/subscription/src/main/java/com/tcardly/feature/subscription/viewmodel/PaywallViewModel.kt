@@ -43,6 +43,10 @@ class PaywallViewModel @Inject constructor(
         _uiState.update { it.copy(selectedPlan = plan) }
     }
 
+    fun resetPurchaseSuccess() {
+        _uiState.update { it.copy(purchaseSuccess = false) }
+    }
+
     fun purchase() {
         viewModelScope.launch {
             _uiState.update { it.copy(isPurchasing = true, error = null) }

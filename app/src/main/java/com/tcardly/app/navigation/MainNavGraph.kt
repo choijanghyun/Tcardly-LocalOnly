@@ -1,6 +1,5 @@
 package com.tcardly.app.navigation
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -38,8 +37,7 @@ import com.tcardly.feature.subscription.navigation.subscriptionManageScreen
 
 @Composable
 fun MainNavGraph(
-    navController: NavHostController,
-    snackbarHostState: SnackbarHostState
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,

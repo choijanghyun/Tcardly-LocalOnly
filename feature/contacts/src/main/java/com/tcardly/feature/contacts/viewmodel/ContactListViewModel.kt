@@ -53,18 +53,30 @@ class ContactListViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 _query.debounce(300),
-                groupTagRepository.getAllTags()
-            ) { query, tags ->
+                groupTagRepository.getAllTags(),
+                _selectedTagId,
+                _sortBy
+            ) { query, tags, selectedTagId, sortBy ->
                 searchContactsUseCase(query).map { cards ->
-                    if (cards.isEmpty() && query.isBlank()) {
+                    val filteredCards = if (selectedTagId != null) {
+                        cards.filter { card -> card.tags.any { it.id == selectedTagId } }
+                    } else cards
+
+                    val sortedCards = when (sortBy) {
+                        SortOption.DATE -> filteredCards.sortedByDescending { it.createdAt }
+                        SortOption.NAME -> filteredCards.sortedBy { it.name }
+                        SortOption.COMPANY -> filteredCards.sortedBy { it.company ?: "" }
+                    }
+
+                    if (sortedCards.isEmpty() && query.isBlank() && selectedTagId == null) {
                         ContactListUiState.Empty
                     } else {
                         ContactListUiState.Success(
-                            cards = cards,
+                            cards = sortedCards,
                             tags = tags,
                             query = query,
-                            selectedTagId = _selectedTagId.value,
-                            sortBy = _sortBy.value
+                            selectedTagId = selectedTagId,
+                            sortBy = sortBy
                         )
                     }
                 }

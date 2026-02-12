@@ -78,27 +78,33 @@ class SubscriptionRepositoryImpl @Inject constructor(
 
     override suspend fun checkAiUsageLimit(): Boolean {
         val state = getSubscriptionState()
-        return when (state.plan) {
+        val effectivePlan = if (state.status == SubscriptionStatus.ACTIVE) state.plan else SubscriptionPlan.FREE
+        return when (effectivePlan) {
             SubscriptionPlan.BUSINESS -> true
             SubscriptionPlan.PRO -> state.aiUsageCount < 30
             SubscriptionPlan.FREE -> state.aiUsageCount < 3
         }
     }
 
-    override suspend fun incrementAiUsage() { dao.incrementAiUsage() }
+    override suspend fun incrementAiUsage() {
+        try { dao.incrementAiUsage() } catch (_: Exception) { }
+    }
 
     override suspend fun checkExportLimit(): Boolean {
         val state = getSubscriptionState()
-        return when (state.plan) {
+        val effectivePlan = if (state.status == SubscriptionStatus.ACTIVE) state.plan else SubscriptionPlan.FREE
+        return when (effectivePlan) {
             SubscriptionPlan.BUSINESS, SubscriptionPlan.PRO -> true
             SubscriptionPlan.FREE -> state.exportCount < 100
         }
     }
 
-    override suspend fun incrementExportCount() { dao.incrementExportCount() }
+    override suspend fun incrementExportCount() {
+        try { dao.incrementExportCount() } catch (_: Exception) { }
+    }
 
     override suspend fun resetMonthlyAiUsage() {
-        dao.resetAiUsage(System.currentTimeMillis())
+        try { dao.resetAiUsage(System.currentTimeMillis()) } catch (_: Exception) { }
     }
 
     private fun SubscriptionCacheEntity.toSubscriptionState(): SubscriptionState {

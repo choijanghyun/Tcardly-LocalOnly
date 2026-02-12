@@ -18,7 +18,6 @@ import com.tcardly.core.designsystem.theme.TCardlyColors
 import com.tcardly.core.ui.component.TCardlyTextField
 import com.tcardly.feature.company.viewmodel.AiChatViewModel
 import com.tcardly.feature.company.viewmodel.ChatMessage
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,14 +28,13 @@ fun AiChatScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(companyName) { viewModel.init(companyName) }
 
     // 새 메시지 시 스크롤
     LaunchedEffect(uiState.messages.size) {
         if (uiState.messages.isNotEmpty()) {
-            scope.launch { listState.animateScrollToItem(uiState.messages.size - 1) }
+            listState.animateScrollToItem(uiState.messages.size - 1)
         }
     }
 
@@ -95,7 +93,7 @@ fun AiChatScreen(
                     state = listState,
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.weight(1f)
                 ) {
                     items(uiState.messages) { message ->
                         ChatBubble(message)
@@ -114,7 +112,7 @@ fun AiChatScreen(
 
             uiState.error?.let {
                 Text(it, color = TCardlyColors.CoralWarm, style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(horizontal = 16.dp))
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
             }
         }
     }

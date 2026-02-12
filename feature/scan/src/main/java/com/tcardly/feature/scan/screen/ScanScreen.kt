@@ -35,6 +35,7 @@ fun ScanScreen(
     viewModel: ScanViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     // 갤러리 런처
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -48,7 +49,9 @@ fun ScanScreen(
         viewModel.events.collectLatest { event ->
             when (event) {
                 is ScanEvent.NavigateToResult -> onNavigateToScanResult(event.ocrJson)
-                is ScanEvent.ShowError -> { /* Snackbar 등으로 처리 */ }
+                is ScanEvent.ShowError -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
             }
         }
     }

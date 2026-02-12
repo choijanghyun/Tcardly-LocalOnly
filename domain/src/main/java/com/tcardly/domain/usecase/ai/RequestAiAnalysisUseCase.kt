@@ -11,15 +11,14 @@ class RequestAiAnalysisUseCase @Inject constructor(
     private val subscriptionRepository: SubscriptionRepository
 ) {
     suspend operator fun invoke(companyName: String): ResultWrapper<AiAnalysisReport> {
-        // 캐시가 유효하면 한도를 차감하지 않고 반환 (캐시 TTL은 Repository가 관리)
-        val cached = companyRepository.getAiAnalysisCache(companyName)
-        if (cached != null && System.currentTimeMillis() - cached.generatedAt < AI_CACHE_TTL) {
-            return ResultWrapper.Success(cached)
+        if (companyName.isBlank()) {
+            return ResultWrapper.Error("기업명을 입력해주세요.")
         }
 
+        // Repository가 캐시를 관리하므로 캐시 히트 시 한도 차감 없이 반환됨
         // 새로운 분석 요청 시 한도 체크
         if (!subscriptionRepository.checkAiUsageLimit()) {
-            return ResultWrapper.Error("AI 분석 월간 한도를 초과했습니다.")
+            return ResultWrapper.Error("AI 분석 월간 한도를 초과했습니다.", LIMIT_EXCEEDED_ERROR)
         }
 
         val result = companyRepository.requestAiAnalysis(companyName)
@@ -30,6 +29,6 @@ class RequestAiAnalysisUseCase @Inject constructor(
     }
 
     companion object {
-        private const val AI_CACHE_TTL = 24L * 60 * 60 * 1000
+        val LIMIT_EXCEEDED_ERROR = IllegalStateException("limit_exceeded")
     }
 }

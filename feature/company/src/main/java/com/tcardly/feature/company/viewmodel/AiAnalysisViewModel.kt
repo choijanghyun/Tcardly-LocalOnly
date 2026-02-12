@@ -38,7 +38,7 @@ class AiAnalysisViewModel @Inject constructor(
                     )
                 }
                 is ResultWrapper.Error -> {
-                    val isLimit = result.message.contains("한도")
+                    val isLimit = result.throwable == RequestAiAnalysisUseCase.LIMIT_EXCEEDED_ERROR
                     _uiState.value = AiAnalysisUiState(
                         companyName = companyName, isLoading = false,
                         error = result.message, isLimitExceeded = isLimit

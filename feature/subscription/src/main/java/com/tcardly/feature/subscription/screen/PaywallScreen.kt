@@ -33,7 +33,10 @@ fun PaywallScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(uiState.purchaseSuccess) {
-        if (uiState.purchaseSuccess) onSubscribed()
+        if (uiState.purchaseSuccess) {
+            viewModel.resetPurchaseSuccess()
+            onSubscribed()
+        }
     }
 
     Scaffold(
