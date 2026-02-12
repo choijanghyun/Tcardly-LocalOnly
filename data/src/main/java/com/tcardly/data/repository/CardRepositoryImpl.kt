@@ -12,6 +12,7 @@ import com.tcardly.domain.model.BusinessCard
 import com.tcardly.domain.repository.CardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -60,8 +61,10 @@ class CardRepositoryImpl @Inject constructor(
                     timestamp = DateUtils.now()
                 )
             )
+            Timber.d("명함 저장 성공: id=$id, name=${card.name}")
             ResultWrapper.Success(id)
         } catch (e: Exception) {
+            Timber.e(e, "명함 저장 실패: name=${card.name}")
             ResultWrapper.Error("명함 저장 실패: ${e.message}", e)
         }
     }
@@ -69,8 +72,10 @@ class CardRepositoryImpl @Inject constructor(
     override suspend fun updateCard(card: BusinessCard): ResultWrapper<Unit> {
         return try {
             cardDao.updateCard(card.toEntity())
+            Timber.d("명함 수정 성공: id=${card.id}")
             ResultWrapper.Success(Unit)
         } catch (e: Exception) {
+            Timber.e(e, "명함 수정 실패: id=${card.id}")
             ResultWrapper.Error("명함 수정 실패: ${e.message}", e)
         }
     }
@@ -78,8 +83,10 @@ class CardRepositoryImpl @Inject constructor(
     override suspend fun deleteCard(cardId: Long): ResultWrapper<Unit> {
         return try {
             cardDao.deleteCard(cardId)
+            Timber.d("명함 삭제 성공: id=$cardId")
             ResultWrapper.Success(Unit)
         } catch (e: Exception) {
+            Timber.e(e, "명함 삭제 실패: id=$cardId")
             ResultWrapper.Error("명함 삭제 실패: ${e.message}", e)
         }
     }
@@ -87,8 +94,10 @@ class CardRepositoryImpl @Inject constructor(
     override suspend fun toggleFavorite(cardId: Long, isFavorite: Boolean): ResultWrapper<Unit> {
         return try {
             cardDao.toggleFavorite(cardId, isFavorite, DateUtils.now())
+            Timber.d("즐겨찾기 변경: id=$cardId, isFavorite=$isFavorite")
             ResultWrapper.Success(Unit)
         } catch (e: Exception) {
+            Timber.e(e, "즐겨찾기 변경 실패: id=$cardId")
             ResultWrapper.Error("즐겨찾기 변경 실패", e)
         }
     }

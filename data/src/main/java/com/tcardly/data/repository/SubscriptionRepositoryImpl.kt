@@ -9,6 +9,7 @@ import com.tcardly.domain.repository.SubscriptionRepository
 import com.tcardly.domain.repository.SubscriptionState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,8 +44,10 @@ class SubscriptionRepositoryImpl @Inject constructor(
                 lastVerifiedAt = now
             )
             dao.insertOrUpdate(entity)
+            Timber.d("구독 구매 성공: plan=$plan")
             ResultWrapper.Success(Unit)
         } catch (e: Exception) {
+            Timber.e(e, "구독 구매 실패: plan=$plan")
             ResultWrapper.Error("구매 처리 중 오류가 발생했습니다.", e)
         }
     }
@@ -52,8 +55,10 @@ class SubscriptionRepositoryImpl @Inject constructor(
     override suspend fun restorePurchases(): ResultWrapper<SubscriptionState> {
         return try {
             val current = getSubscriptionState()
+            Timber.d("구매 복원 완료: plan=${current.plan}")
             ResultWrapper.Success(current)
         } catch (e: Exception) {
+            Timber.e(e, "구매 복원 실패")
             ResultWrapper.Error("구매 복원에 실패했습니다.", e)
         }
     }
@@ -66,12 +71,14 @@ class SubscriptionRepositoryImpl @Inject constructor(
             if (entity.expiresAt != null && entity.expiresAt < now
                 && entity.status == SubscriptionStatus.ACTIVE
             ) {
+                Timber.w("구독 만료 감지: plan=${entity.plan}")
                 val updated = entity.copy(status = SubscriptionStatus.EXPIRED, lastVerifiedAt = now)
                 dao.insertOrUpdate(updated)
                 return ResultWrapper.Success(updated.toSubscriptionState())
             }
             ResultWrapper.Success(entity.toSubscriptionState())
         } catch (e: Exception) {
+            Timber.e(e, "구독 검증 실패")
             ResultWrapper.Error("구독 검증에 실패했습니다.", e)
         }
     }

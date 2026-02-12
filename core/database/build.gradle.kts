@@ -33,4 +33,5 @@ dependencies {
     
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}")
+    implementation("com.jakewharton.timber:timber:${Versions.timber}")
 }

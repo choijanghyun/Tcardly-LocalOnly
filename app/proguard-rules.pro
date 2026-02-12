@@ -54,6 +54,9 @@
 -keep class com.tcardly.core.security.** { *; }
 -keep class com.tcardly.core.billing.** { *; }
 
+# ── Timber ──
+-dontwarn org.jetbrains.annotations.**
+
 # ── OkHttp ──
 -dontwarn okhttp3.**
 -dontwarn okio.**

@@ -3,6 +3,7 @@ package com.tcardly.core.database.di
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.tcardly.core.database.TCardlyDatabase
 import com.tcardly.core.database.dao.*
@@ -13,6 +14,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
+import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -32,7 +34,17 @@ object DatabaseModule {
             TCardlyDatabase.DATABASE_NAME
         )
             .openHelperFactory(factory)
-            .fallbackToDestructiveMigration()
+            .addCallback(object : RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+                    Timber.d("데이터베이스 생성 완료: ${TCardlyDatabase.DATABASE_NAME}")
+                }
+
+                override fun onOpen(db: SupportSQLiteDatabase) {
+                    super.onOpen(db)
+                    Timber.d("데이터베이스 연결: version=${db.version}")
+                }
+            })
             .build()
     }
 

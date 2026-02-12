@@ -16,4 +16,5 @@ object Versions {
     const val billing = "6.1.0"
     const val coroutines = "1.7.3"
     const val lifecycle = "2.7.0"
+    const val timber = "5.0.1"
 }

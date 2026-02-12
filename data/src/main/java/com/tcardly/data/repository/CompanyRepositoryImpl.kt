@@ -11,6 +11,7 @@ import com.tcardly.domain.model.CompanyInfo
 import com.tcardly.domain.model.FinancialYear
 import com.tcardly.domain.model.SwotAnalysis
 import com.tcardly.domain.repository.CompanyRepository
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,17 +31,21 @@ class CompanyRepositoryImpl @Inject constructor(
             // 캐시 확인 (TTL 7일)
             val cached = dao.getByName(companyName)
             if (cached != null && System.currentTimeMillis() - cached.fetchedAt < COMPANY_CACHE_TTL) {
+                Timber.d("기업 정보 캐시 히트: $companyName")
                 return ResultWrapper.Success(cached.toDomain())
             }
 
             // TODO: DART OpenAPI 호출 → CompanyInfoEntity 저장
             // 현재는 캐시가 있으면 반환, 없으면 에러
             if (cached != null) {
+                Timber.d("기업 정보 만료된 캐시 반환: $companyName")
                 ResultWrapper.Success(cached.toDomain())
             } else {
+                Timber.w("기업 정보 없음 (API 미구현): $companyName")
                 ResultWrapper.Error("기업 정보를 찾을 수 없습니다. 인터넷 연결을 확인해 주세요.")
             }
         } catch (e: Exception) {
+            Timber.e(e, "기업 정보 조회 중 오류: $companyName")
             ResultWrapper.Error("기업 정보 조회 중 오류가 발생했습니다.", e)
         }
     }
@@ -50,12 +55,15 @@ class CompanyRepositoryImpl @Inject constructor(
             // 캐시 확인 (TTL 24시간)
             val cached = getAiAnalysisCache(companyName)
             if (cached != null && System.currentTimeMillis() - cached.generatedAt < AI_CACHE_TTL) {
+                Timber.d("AI 분석 캐시 히트: $companyName")
                 return ResultWrapper.Success(cached)
             }
 
             // TODO: Gemini API 호출 → AiAnalysisCacheEntity 저장
+            Timber.w("AI 분석 불가 (API 미구현): $companyName")
             ResultWrapper.Error("AI 분석을 위해 인터넷 연결이 필요합니다.")
         } catch (e: Exception) {
+            Timber.e(e, "AI 분석 중 오류: $companyName")
             ResultWrapper.Error("AI 분석 중 오류가 발생했습니다.", e)
         }
     }
@@ -64,7 +72,8 @@ class CompanyRepositoryImpl @Inject constructor(
         val entity = dao.getAiCache(companyName) ?: return null
         return try {
             gson.fromJson(entity.analysisJson, AiAnalysisReport::class.java)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Timber.e(e, "AI 분석 캐시 파싱 실패: $companyName")
             null
         }
     }
@@ -76,8 +85,10 @@ class CompanyRepositoryImpl @Inject constructor(
     ): ResultWrapper<String> {
         return try {
             // TODO: Gemini API 호출 (Q&A 모드)
+            Timber.w("AI Q&A 불가 (API 미구현): $companyName, question=$question")
             ResultWrapper.Error("AI Q&A를 위해 인터넷 연결이 필요합니다.")
         } catch (e: Exception) {
+            Timber.e(e, "AI 질문 처리 중 오류: $companyName")
             ResultWrapper.Error("AI 질문 처리 중 오류가 발생했습니다.", e)
         }
     }
